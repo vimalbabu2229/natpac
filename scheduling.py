@@ -46,10 +46,10 @@ def generateTempSet(leg, mode = 0) -> pd.DataFrame:
 
     # Creating a copy of the main legs.Can be limited with steering duty remaining 
     temp_set_df = df[(df['Departure Place'] == leg['Arrival Place'])
-                  & (df['Departure Time'] > leg['Arrival Time act'])]
+                  & (df['Departure Time'] > leg['Arrival Time'])]
     temp_set_df = temp_set_df.sort_values(
         'Departure Time', ascending=True).reset_index(drop=True)
-    temp_set_df['Terminal Gap'] = temp_set_df['Departure Time'] - leg['Arrival Time act']
+    temp_set_df['Terminal Gap'] = temp_set_df['Departure Time'] - leg['Arrival Time']
     # Sorting and resetting index
     # '''BELOW LINE MAY BE NOT NECESSARY'''
     # display(temp_set)
@@ -109,7 +109,7 @@ def displayTrip(stack):
     frame['Terminal Gap'] = frame['Terminal Gap'].shift(-1)
     #Calculating the steering duty 
     duty = secToTime(frame['Duty'].iloc[len(frame) - 1])
-    spread_over = secToTime((stack[-1]['current_leg'])['Arrival Time act'] - (stack[0]['current_leg'])['Departure Time'])
+    spread_over = secToTime((stack[-1]['current_leg'])['Arrival Time'] - (stack[0]['current_leg'])['Departure Time'])
     frame = frame.drop('Duty', axis=1)
     trips_count += 1
     return [frame, duty, spread_over]
@@ -186,12 +186,12 @@ def generateTrip(stack):
             # print("TempSet is below ")
             # display(temp_set)
             stack.append({"current_leg": temp_set.iloc[0], "temp_set": popTempSet(temp_set), "break": True})
-            spread_over = (stack[-1]['current_leg'])['Arrival Time act'] - (stack[0]['current_leg'])['Departure Time']
+            spread_over = (stack[-1]['current_leg'])['Arrival Time'] - (stack[0]['current_leg'])['Departure Time']
         else:
             # In the below line , break is made to follow the stack top because after setting it true inside the 
             # break insertion logic , the subsequent legs should have break True . So it should follow stack top  
             stack.append({"current_leg": temp_set.iloc[0], "temp_set": popTempSet(temp_set), "break": stack[-1]["break"]})
-            spread_over = (stack[-1]['current_leg'])['Arrival Time act'] - (stack[0]['current_leg'])['Departure Time']
+            spread_over = (stack[-1]['current_leg'])['Arrival Time'] - (stack[0]['current_leg'])['Departure Time']
         if (stack[-1]['current_leg'])['Duty'] > MAX_DUTY or spread_over > MAX_SPREAD_OVER \
             or ((stack[-1]['current_leg'])['Duty'] > BREAK_LIMIT_DUTY and stack[-1]["break"] == False) :
             backtrack(stack)

@@ -31,9 +31,9 @@ def preprocess_data(input_file_path, output_file_path):
     for col in df.columns:
         if 'sl no.' in col.casefold():
             df = df.rename(columns={col: 'Sl No.'})
-        elif 'departure place' in col.casefold() and 'place' in col.casefold():
+        elif 'departure' in col.casefold() and 'place' in col.casefold():
             df = df.rename(columns={col: 'Departure Place'})
-        elif 'departure time' in col.casefold() and 'time' in col.casefold():
+        elif 'departure' in col.casefold() and 'time' in col.casefold():
             df = df.rename(columns={col: 'Departure Time'})
         elif 'arrival' in col.casefold() and 'place' in col.casefold():
             df = df.rename(columns={col: 'Arrival Place'})
